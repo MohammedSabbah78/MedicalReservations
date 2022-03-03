@@ -78,6 +78,7 @@ class CityController extends Controller
     public function edit(City $city)
     {
         //
+        return response()->view('cms.cities.edit', ['city' => $city]);
     }
 
     /**
@@ -90,6 +91,23 @@ class CityController extends Controller
     public function update(Request $request, City $city)
     {
         //
+        $request->validate([
+            'name_en' => 'required|string|min:3|max:50',
+            'name_ar' => 'required|string|min:3|max:50',
+            'active' => 'nullable|in:on'
+        ]);
+        $city->name_en = $request->input('name_en');
+        $city->name_ar = $request->input('name_ar');
+        $city->active = $request->has('active');
+        $isUpdated = $city->save();
+        if ($isUpdated) {
+            // return redirect()->route('cities.index');
+            session()->flash('message', 'City Updated Successfully');
+            return redirect()->back();
+            // return redirect()->route('cities.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     /**
@@ -101,5 +119,7 @@ class CityController extends Controller
     public function destroy(City $city)
     {
         //
+        $deleted = $city->delete();
+        return redirect()->back();
     }
 }

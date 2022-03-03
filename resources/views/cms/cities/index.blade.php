@@ -43,7 +43,23 @@
                                     </td>
                                     <td>{{$city->created_at}}</td>
                                     <td>{{$city->updated_at}}</td>
-                                    <td></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{route('cities.edit',[$city->id])}}" class="btn btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="POST" action="{{route('cities.destroy',[$city->id])}}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+
+                                            </form>
+
+
+                                        </div>
+                                    </td>
 
                                 </tr>
                                 @endforeach
