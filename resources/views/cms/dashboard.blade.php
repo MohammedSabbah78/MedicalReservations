@@ -1,4 +1,5 @@
 @extends('cms.parent')
+@section('title',__('cms.dashboard'))
 @section('name')
 <!-- Main content -->
 <div class="content">
