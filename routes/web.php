@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('cms/admin')->group(function () {
 
     Route::view('/', 'cms.dashboard');
-    Route::resource('cities',CityController::class);
+    Route::resource('cities', CityController::class);
+    Route::resource('users', UserController::class);
 });
-
-

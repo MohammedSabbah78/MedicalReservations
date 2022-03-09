@@ -17,7 +17,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{asset('cms/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('cms/dist/css/adminlte.min.css')}}">
-
+  <link rel="stylesheet" href="{{asset('cms/plugins/toastr/toastr.min.css')}}">
   @yield('styles')
 </head>
 
@@ -255,6 +255,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </ul>
             </li>
 
+
+
+
+            {{-- Users --}}
+            <li class="nav-header">{{__('cms.hr')}}</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-circle"></i>
+                <p>
+                  {{__('cms.users')}}
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{route('users.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>{{__('cms.index')}}</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="{{route('users.create')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>{{__('cms.create')}}</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
@@ -315,6 +344,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="{{asset('cms/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   <!-- AdminLTE App -->
   <script src="{{asset('cms/dist/js/adminlte.min.js')}}"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="{{asset('cms/plugins/toastr/toastr.min.js')}}"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @yield('scripts')
 </body>
 

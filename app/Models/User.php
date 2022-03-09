@@ -19,6 +19,13 @@ class User extends Authenticatable
 
     }
 
+    public function getGenderTypeAttribute(){
+ 
+        return $this->gender == 'M' ? 'Male' : 'Female';
+    }
+
+
+
     /**
      * The attributes that are mass assignable.
      *

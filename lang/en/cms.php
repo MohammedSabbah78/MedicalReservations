@@ -15,6 +15,22 @@ return [
     "name_en" => "Name En",
     "name_ar" => "Name Ar",
     "save" => "Save",
+    "hr" => "Human Resources",
+    "users" => "Users",
+    "create_user" => "Create User",
+    "update_user" => "Update User",
+    "name_user" => "Name",
+    "gender" => "Gender",
+    "email" => "Email",
+    "male" => "Male",
+    "female" => "Female",
+
+
+
+
+
+
+
 
 
 
