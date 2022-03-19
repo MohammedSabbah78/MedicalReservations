@@ -24,6 +24,11 @@ return [
     "email" => "Email",
     "male" => "Male",
     "female" => "Female",
+    "admins" => "Admins",
+    "create_admin" => "Create Admin",
+    "update_admin" => "Update Admin",
+
+
 
 
 
