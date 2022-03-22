@@ -6,10 +6,17 @@ use App\Models\Admin;
 use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
+
+    public function __construct()
+    {
+        // $this->authorizeResource(Admin::class,'admin');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +24,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $admins = Admin::all();
+        $admins = Admin::with('roles')->get();
         return response()->view('cms.admins.index', ['admins' => $admins]);
     }
 
@@ -28,7 +35,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return response()->view('cms.admins.create');
+        $role = Role::where('guard_name', '=', 'admin')->get();
+        return response()->view('cms.admins.create', ['roles' => $role]);
     }
 
     /**
@@ -40,6 +48,7 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $validator = Validator($request->all(), [
+            'role_id' => 'required|numeric|exists:roles,id',
             'name' => 'required|string|min:3',
             'email' => 'required|email|unique:admins,email',
         ]);
@@ -55,6 +64,7 @@ class AdminController extends Controller
 
             $admin->password = Hash::make('password');
             $isSaved = $admin->save();
+            if ($isSaved) $admin->assignRole(Role::findOrFail($request->input('role_id')));
             return response()->json(
                 ['message' => $isSaved ? 'Created' : 'Failed'],
                 $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
@@ -86,7 +96,9 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        return response()->view('cms.admins.update', ['admin' => $admin]);
+        $role = Role::where('guard_name', '=', 'admin')->get();
+        $adminRole = $admin->roles[0];
+        return response()->view('cms.admins.update', ['admin' => $admin, 'roles' => $role, 'adminRoles' => $adminRole]);
     }
 
     /**
@@ -108,6 +120,7 @@ class AdminController extends Controller
             $admin->name = $request->input('name');
             $admin->email = $request->input('email');
             $isSaved = $admin->save();
+            if ($isSaved) $admin->syncRoles(Role::findOrFail($request->input('role_id')));
             return response()->json(
                 ['message' => $isSaved ? 'Updated' : 'Failed'],
                 $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
@@ -128,10 +141,17 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
-        $deleted = $admin->delete();
+        if (auth('admin')->id() != $admin->id) {
+            $deleted = $admin->delete();
+            return response()->json(
+                ['message' => $deleted ? 'Deleted!' : 'Failed'],
+                $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+        }
         return response()->json(
-            ['message' => $deleted ? 'Deleted!' : 'Failed'],
-            $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+            ['message' =>  'Can\'t Delete Your Self'],
+            Response::HTTP_BAD_REQUEST
         );
     }
 }

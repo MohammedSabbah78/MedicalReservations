@@ -1,23 +1,23 @@
 @extends('cms.parent')
-@section('title',__('cms.admins'))
+@section('title',__('cms.roles'))
 @section('main-content')
 
 @section('styles')
 <!-- Toastr -->
 <link rel="stylesheet" href="{{asset('cms/plugins/select2/css/select2.min.css')}}">
-<link rel="stylesheet" href="{{asset('cms/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('cms/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}"> --}}
 @endsection
 
 
 @section('page_name',__('cms.create'))
-@section('main_page',__('cms.admins'))
+@section('main_page',__('cms.roles'))
 @section('small_page_name',__('cms.create'))
 
 <div class="col-md-12">
     <!-- general form elements -->
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">{{__('cms.create_admin')}}</h3>
+            <h3 class="card-title">{{__('cms.create_roles')}}</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -25,26 +25,23 @@
             @csrf
             <div class="card-body">
 
-                <div class="form-group">
-                    <label>{{__('cms.roles')}}</label>
-                    <select class="form-control roles " style="width: 100%;" id="role_id">
 
-                        @foreach ($roles as $role )
-                        <option value="{{$role->id}}">{{$role->name}}</option>
-                        @endforeach
+
+
+                <div class="form-group">
+                    <label>{{__('cms.user_type')}}</label>
+                    <select class="form-control user_type " style="width: 100%;" id="guard_name">
+                        <option value="admin">{{__('cms.admins')}}</option>
+                        <option value="user">{{__('cms.users')}}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="name">{{__('cms.name_user')}}</label>
-                    <input type="text" name="name_user" class="form-control" id="name"
-                        placeholder="{{__('cms.name_user')}}" value="{{old('name_user')}}">
+                    <label for="name">{{__('cms.roles')}}</label>
+                    <input type="text" name="name_role" class="form-control" id="name" placeholder="{{__('cms.roles')}}"
+                        value="{{old('name_role')}}">
                 </div>
-                <div class="form-group">
-                    <label for="email">{{__('cms.email')}}</label>
-                    <input type="text" name="user_email" class="form-control" id="email"
-                        placeholder="{{__('cms.email')}}" value="{{old('user_email')}}">
-                </div>
+
 
 
 
@@ -71,15 +68,20 @@
 <script src="{{asset('cms/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- Toastr -->
 <script>
-    $('.roles').select2({
+    //Initialize Select2 Elements
+    // $('.select2').select2()
+    
+    //Initialize Select2 Elements
+$('.guard_name').select2({
     theme: 'bootstrap4'
     });
 
-    function performStore(){
-            axios.post('/cms/admin/admins', {
-               role_id: document.getElementById('role_id').value,
+
+        function performStore(){
+            axios.post('/cms/admin/roles', {
                name: document.getElementById('name').value,
-               email: document.getElementById('email').value,
+               guard_name: document.getElementById('guard_name').value,
+
             })
             .then(function (response) {
             console.log(response);

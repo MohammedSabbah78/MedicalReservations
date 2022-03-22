@@ -29,16 +29,22 @@ Route::prefix('cms')->middleware('guest:user,admin')->group(function () {
 
 
 Route::prefix('cms/admin')->middleware('auth:admin')->group(function () {
-
+    Route::resource('admins', AdminController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 });
+
+Route::prefix('cms/admin')->middleware('auth:admin')->group(function () {
+    Route::post('roles/permissions', [RoleController::class, 'updateRolePermission']);
+    Route::get('users/{user}/permissions/edit', [UserController::class, 'editUserPermission'])->name('user.edit-permissions');
+    Route::put('users/{user}/permissions', [UserController::class, 'updateUserPermission'])->name('user.update-permissions');
+});
+
 
 Route::prefix('cms/admin')->middleware('auth:user,admin')->group(function () {
     Route::view('/', 'cms.dashboard');
     Route::resource('cities', CityController::class);
     Route::resource('users', UserController::class);
-    Route::resource('admins', AdminController::class);
 
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });

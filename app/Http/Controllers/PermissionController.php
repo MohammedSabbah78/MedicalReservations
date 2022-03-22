@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Symfony\Component\HttpFoundation\Response;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        // $this->authorizeResource(Permission::class, 'permission');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +21,9 @@ class PermissionController extends Controller
     public function index()
     {
         //
+        $permissions = Permission::all();
+
+        return response()->view('cms.permissions.index', ['permissions' => $permissions]);
     }
 
     /**
@@ -25,6 +34,7 @@ class PermissionController extends Controller
     public function create()
     {
         //
+        return response()->view('cms.permissions.create');
     }
 
     /**
@@ -36,6 +46,27 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         //
+        $validator = Validator($request->all(), [
+            'name' => 'required|string',
+            'guard_name' => 'required|string|in:admin,user',
+
+        ]);
+
+        if (!$validator->fails()) {
+            $permission = new Permission();
+            $permission->name = $request->input('name');
+            $permission->guard_name = $request->input('guard_name');
+            $isSaved = $permission->save();
+            return response()->json(
+                ['message' => $isSaved ? 'Created' : 'Failed'],
+                $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ["message" => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -46,7 +77,6 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
     }
 
     /**
@@ -57,7 +87,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        //
+        return response()->view('cms.permissions.update', ['permission' => $permission]);
     }
 
     /**
@@ -69,7 +99,29 @@ class PermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
-        //
+
+
+        $validator = Validator($request->all(), [
+            'name' => 'required|string',
+            'guard_name' => 'required|string|in:admin,user',
+
+        ]);
+
+
+        if (!$validator->fails()) {
+            $permission->name = $request->input('name');
+            $permission->guard_name = $request->input('guard_name');
+            $isSaved = $permission->save();
+            return response()->json(
+                ['message' => $isSaved ? 'Updated' : 'Failed'],
+                $isSaved ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ["message" => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -81,5 +133,10 @@ class PermissionController extends Controller
     public function destroy(Permission $permission)
     {
         //
+        $deleted = $permission->delete();
+        return response()->json(
+            ['message' => $deleted ? 'Deleted!' : 'Failed'],
+            $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+        );
     }
 }

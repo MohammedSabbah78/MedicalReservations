@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use SebastianBergmann\Environment\Console;
+use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -20,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::with(['city'])->get();
+        $users = User::withCount('permissions')->with(['city'])->get();
         return response()->view('cms.users.index', ['users' => $users]);
     }
 
@@ -147,5 +148,61 @@ class UserController extends Controller
             ['message' => $deleted ? 'Deleted!' : 'Failed'],
             $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
+    }
+
+    /**
+     * Show the form for editing the specified resource permssions.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function editUserPermission(Request $request, User $user)
+    {
+
+        $permissions = Permission::where('guard_name', '=', 'user')->get();
+        $userPermissions = $user->permissions;
+
+
+        foreach ($permissions as $permission) {
+            $permission->setAttribute('assigned', false);
+
+            foreach ($userPermissions as $userPermission) {
+                if ($userPermission->id == $permission->id) {
+                    $permission->setAttribute('assigned', true);
+                }
+            }
+        }
+
+
+        return response()->view('cms.users.user-permissions', ['users' => $user, 'permissions' => $permissions]);
+    }
+    /**
+     * Update the specified resource permissions in storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateUserPermission(Request $request, User $user)
+    {
+        $validator = Validator($request->all(), [
+            'permission_id' => 'required|numeric|exists:permissions,id',
+        ]);
+        if (!$validator->fails()) {
+
+            $permission = Permission::findOrFail($request->input('permission_id'));
+            $user->hasPermissionTo($permission)
+                ? $user->revokePermissionTo($permission)
+                : $user->givePermissionTo($permission);
+
+            return response()->json(
+                ["message" => "Permissions Updated Successfully"],
+                Response::HTTP_OK
+            );
+        } else {
+            return response()->json(
+                ["message" => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 }

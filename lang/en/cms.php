@@ -27,6 +27,20 @@ return [
     "admins" => "Admins",
     "create_admin" => "Create Admin",
     "update_admin" => "Update Admin",
+    "roles" => "Roles",
+    "permissions" => "Permissions",
+    "create_roles" => "Create Roles",
+    "update_roles" => "Update Roles",
+    "create_permissions" => "Create Permissions",
+    "update_permissions" => "Update Permissions",
+    "roles_and_permissions" => "Roles And Permissions",
+    "user_type" => "User Type",
+    "assigned" => "Assigned",
+
+
+
+
+
 
 
 

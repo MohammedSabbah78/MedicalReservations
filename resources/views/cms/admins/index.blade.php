@@ -25,6 +25,7 @@
                                     <th style="width: 10px">#</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Role</th>
                                     <th>Created At</th>
                                     <th>Update At</th>
                                     <th>Settings</th>
@@ -37,21 +38,29 @@
                                     <td>{{$admin->id}}</td>
                                     <td>{{$admin->name}}</td>
                                     <td>{{$admin->email}}</td>
-
+                                    <td>{{$admin->roles[0]->name}}</td>
                                     <td>{{$admin->updated_at}}</td>
                                     <td>{{$admin->updated_at}}</td>
                                     <td>
+
+                                        @canany(['Update-Admin', 'Delete-Admin'])
+
                                         <div class="btn-group">
+                                            @can('Update-Admin')
                                             <a href="{{route('admins.edit',[$admin->id])}}" class="btn btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            @endcan
+                                            @can('Delete-Admin')
+                                            {{-- @if (auth('admin')->Admin()->id != $admin->id) --}}
                                             <a href="#" onclick="confirmDelete('{{$admin->id}}',this)"
                                                 class="btn btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-
-
+                                            {{-- @endif --}}
+                                            @endcan
                                         </div>
+                                        @endcanany
                                     </td>
 
                                 </tr>

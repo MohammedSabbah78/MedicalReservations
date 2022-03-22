@@ -1,12 +1,12 @@
 @extends('cms.parent')
-@section('title',__('cms.users'))
+@section('title',__('cms.roles'))
 @section('main-content')
 
 
 
 
 @section('page_name',__('cms.index'))
-@section('main_page',__('cms.users'))
+@section('main_page',__('cms.roles'))
 @section('small_page_name',__('cms.index'))
 
 <section class="content">
@@ -15,7 +15,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{__('cms.users')}}</h3>
+                        <h3 class="card-title">{{__('cms.roles')}}</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -24,10 +24,8 @@
                                 <tr>
                                     <th style="width: 10px">#</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th style="width: 40px">Gender</th>
+                                    <th>User Type</th>
                                     <th>Permissions</th>
-                                    <th>City</th>
                                     <th>Created At</th>
                                     <th>Update At</th>
                                     <th>Settings</th>
@@ -35,34 +33,27 @@
                             </thead>
                             <tbody>
 
-                                @foreach ($users as $user )
+                                @foreach ($roles as $role )
                                 <tr>
-                                    <td>{{$user->id}}</td>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$user->email}}</td>
-                                    <td><span
-                                            class="badge @if($user->gender =='M') bg-success @else bg-warning @endif">{{$user->gender_type}}</span>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-app bg-info"
-                                            href="{{route('user.edit-permissions',$user->id)}}">
-                                            <span class="badge bg-green">{{$user->permissions_count}}</span>
-                                            <i class="fas fa-users"></i> Permissions
-                                        </a>
-                                    </td>
-                                    <td>{{$user->city->name_en}}</td>
-                                    <td>{{$user->updated_at}}</td>
-                                    <td>{{$user->updated_at}}</td>
+                                    <td>{{$role->id}}</td>
+                                    <td>{{$role->name}}</td>
+                                    <td><span class="badge  bg-info  ">{{$role->guard_name}}</span></td>
+                                    <td> <a href="{{route('roles.show',$role->id)}}" class="btn btn-app bg-info">
+                                            <span class="badge bg-danger">{{$role->permissions_count}}</span>
+                                            <i class="fas fa-heart"></i> Permissions
+                                        </a> </td>
+                                    <td>{{$role->updated_at}}</td>
+                                    <td>{{$role->updated_at}}</td>
                                     <td>
                                         @canany(['Update-User', 'Delete-User'])
                                         <div class="btn-group">
-                                            @can('Update-User')
-                                            <a href="{{route('users.edit',[$user->id])}}" class="btn btn-warning">
+                                            @can('Update-Role')
+                                            <a href="{{route('roles.edit',[$role->id])}}" class="btn btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @endcan
-                                            @can('Delete-User')
-                                            <a href="#" onclick="confirmDelete('{{$user->id}}',this)"
+                                            @can('Delete-Role')
+                                            <a href="#" onclick="confirmDelete('{{$role->id}}',this)"
                                                 class="btn btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -118,7 +109,7 @@
 
 function performDelete(id,element){
 
-     axios.delete('/cms/admin/users/'+id)
+     axios.delete('/cms/admin/roles/'+id)
         .then(function (response) {
         console.log(response);
         toastr.success(response.data.message);

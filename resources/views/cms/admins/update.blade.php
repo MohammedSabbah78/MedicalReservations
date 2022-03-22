@@ -26,7 +26,17 @@
             @csrf
             <div class="card-body">
 
+                <div class="form-group">
+                    <label>{{__('cms.roles')}}</label>
+                    <select class="form-control roles " style="width: 100%;" id="role_id">
 
+                        @foreach ($roles as $role )
+                        <option value="{{$role->id}}" @if ($adminRoles->id==$role->id)
+                            selected
+                            @endif >{{$role->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div class="form-group">
                     <label for="name">{{__('cms.name_user')}}</label>
@@ -65,8 +75,12 @@
 <!-- Toastr -->
 <script src="{{asset('cms/plugins/toastr/toastr.min.js')}}"></script>
 <script>
+    $('.roles').select2({
+        theme: 'bootstrap4'
+        });
     function updateStore(){
             axios.put('/cms/admin/admins/{{$admin->id}}', {
+                role_id: document.getElementById('role_id').value,
                name: document.getElementById('name').value,
                email: document.getElementById('email').value,
             })

@@ -44,21 +44,27 @@
                                     <td>{{$city->created_at}}</td>
                                     <td>{{$city->updated_at}}</td>
                                     <td>
+                                        @canany(['Update-City', 'Delete-City'])
                                         <div class="btn-group">
+                                            @can('Update-City')
                                             <a href="{{route('cities.edit',[$city->id])}}" class="btn btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            @endcan
+                                            @can('Delete-City')
                                             <form method="POST" action="{{route('cities.destroy',[$city->id])}}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
-                                                    <i class="fas fa-trash"></i> 
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
 
                                             </form>
-
+                                            @endcan
 
                                         </div>
+                                        @endcanany
+
                                     </td>
 
                                 </tr>

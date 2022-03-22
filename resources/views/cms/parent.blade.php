@@ -228,6 +228,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </li>
 
 
+
+
+            @canany(['Create-City', 'Read-Cities'])
+            {{-- Content Managment --}}
             <li class="nav-header">{{__('cms.content_managment')}}</li>
 
             <li class="nav-item">
@@ -239,31 +243,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </a>
               <ul class="nav nav-treeview">
+
+                @can('Read-Cities')
+                {{-- Read Cities --}}
                 <li class="nav-item">
                   <a href="{{route('cities.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>{{__('cms.index')}}</p>
                   </a>
                 </li>
-
+                @endcan
+                @can('Create-City')
+                {{-- Create Cities --}}
                 <li class="nav-item">
                   <a href="{{route('cities.create')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>{{__('cms.create')}}</p>
                   </a>
                 </li>
+                @endcan
 
               </ul>
 
 
 
             </li>
+            @endcanany
 
 
 
 
-            {{-- Users --}}
+            @canany(['Create-User', 'Read-Users','Read-Admins','Create-Admin'])
+
+            {{-- HR --}}
             <li class="nav-header">{{__('cms.hr')}}</li>
+            @canany(['Create-User', 'Read-Users'])
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
@@ -273,22 +287,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </a>
               <ul class="nav nav-treeview">
+
+                @can('Read-Users')
                 <li class="nav-item">
                   <a href="{{route('users.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>{{__('cms.index')}}</p>
                   </a>
                 </li>
+                @endcan
 
+
+
+                @can('Create-User')
                 <li class="nav-item">
                   <a href="{{route('users.create')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>{{__('cms.create')}}</p>
                   </a>
                 </li>
+                @endcan
               </ul>
             </li>
+            @endcanany
 
+            @canany(['Read-Admins','Create-Admin'])
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
@@ -298,6 +321,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </a>
               <ul class="nav nav-treeview">
+
+                @can('Read-Admins')
+
                 <li class="nav-item">
                   <a href="{{route('admins.index')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
@@ -305,22 +331,96 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </a>
                 </li>
 
+                @endcan
+                @can('Create-Admin')
                 <li class="nav-item">
                   <a href="{{route('admins.create')}}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>{{__('cms.create')}}</p>
                   </a>
                 </li>
+                @endcan
+              </ul>
+            </li>
+            @endcanany
+
+            @endcanany
+
+
+
+            @canany(['Create-Permissions', 'Read-Permissions','Create-Role','Read-Roles'])
+
+            {{--Roles And Permissions --}}
+            <li class="nav-header">{{__('cms.roles_and_permissions')}}</li>
+
+            @canany(['Create-Role','Read-Roles'])
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-circle"></i>
+                <p>
+                  {{__('cms.roles')}}
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                @can('Read-Roles')
+                <li class="nav-item">
+                  <a href="{{route('roles.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>{{__('cms.index')}}</p>
+                  </a>
+                </li>
+                @endcan
+
+                @can('Create-Role')
+                <li class="nav-item">
+                  <a href="{{route('roles.create')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>{{__('cms.create')}}</p>
+                  </a>
+                </li>
+                @endcan
               </ul>
             </li>
 
+            @endcanany
 
 
 
 
+            @canany(['Create-Permissions', 'Read-Permissions'])
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-circle"></i>
+                <p>
+                  {{__('cms.permissions')}}
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                @can('Read-Permissions')
+                <li class="nav-item">
+                  <a href="{{route('permissions.index')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>{{__('cms.index')}}</p>
+                  </a>
+                </li>
+                @endcan
 
+                @can('Create-Permissions')
+                <li class="nav-item">
+                  <a href="{{route('permissions.create')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>{{__('cms.create')}}</p>
+                  </a>
+                </li>
+                @endcan
+              </ul>
+            </li>
+            @endcanany
+            @endcanany
 
-
+            {{--Settings --}}
             <li class="nav-header">Settings</li>
             <li class="nav-item">
               <a href="{{route('auth.logout')}}" class="nav-link">
