@@ -19,8 +19,17 @@ class CityController extends Controller
      */
     public function index()
     {
-        $cities = City::all();
-        return view('cms.cities.index', ['cities' => $cities]);
+        if (auth('admin')->check() || auth('user')->check()) {
+            $cities = City::all();
+            return view('cms.cities.index', ['cities' => $cities]);
+        } else {
+            $cities = City::where('active', '=', true)->get();
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'data' => $cities,
+            ]);
+        }
     }
 
     /**

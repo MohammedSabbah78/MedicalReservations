@@ -48,7 +48,7 @@ class RoleController extends Controller
         //
         $validator = Validator($request->all(), [
             'name' => 'required|string',
-            'guard_name' => 'required|string|in:admin,user',
+            'guard_name' => 'required|string|in:admin,user,user-api',
 
         ]);
 
@@ -153,7 +153,7 @@ class RoleController extends Controller
         //
         $validator = Validator($request->all(), [
             'name' => 'required|string',
-            'guard_name' => 'required|string|in:admin,user',
+            'guard_name' => 'required|string|in:admin,user,user-api',
 
         ]);
 

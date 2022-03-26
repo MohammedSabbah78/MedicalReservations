@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiCityController;
 use App\Http\Controllers\Auth\ApiAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,11 @@ Route::prefix('auth')->group(function () {
 
     Route::post('login', [ApiAuthController::class, 'login']);
     Route::post('login-PGCT', [ApiAuthController::class, 'loginPGCT']);
+});
+
+// Route::get('cities', [ApiCityController::class, 'index']);
+Route::middleware('auth:user-api')->group(function () {
+    Route::get('cities', [ApiCityController::class, 'index']);
 });
 
 Route::prefix('auth')->middleware('auth:user-api')->group(function () {

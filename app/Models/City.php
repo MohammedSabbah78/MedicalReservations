@@ -24,4 +24,17 @@ class City extends Model
         'created_at',
         'updated_at',
     ];
+
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d',
+        'active' => 'boolean',
+
+    ];
 }

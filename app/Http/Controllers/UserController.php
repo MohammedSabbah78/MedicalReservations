@@ -159,7 +159,7 @@ class UserController extends Controller
     public function editUserPermission(Request $request, User $user)
     {
 
-        $permissions = Permission::where('guard_name', '=', 'user')->get();
+        $permissions = Permission::where('guard_name', '=', 'user')->orWhere('guard_name', '=', 'user-api')->get();
         $userPermissions = $user->permissions;
 
 

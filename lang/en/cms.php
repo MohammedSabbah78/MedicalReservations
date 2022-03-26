@@ -36,6 +36,7 @@ return [
     "roles_and_permissions" => "Roles And Permissions",
     "user_type" => "User Type",
     "assigned" => "Assigned",
+    'user_api' => 'User API',
 
 
 

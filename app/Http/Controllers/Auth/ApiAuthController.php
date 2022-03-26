@@ -51,6 +51,7 @@ class ApiAuthController extends Controller
             $decodedResponse = json_decode($response);
             $user = User::where('email', '=', $request->input('email'))->first();
             $user->setAttribute('token', $decodedResponse->access_token);
+            $user->load('city');
             return response()->json([
                 'status' => true,
                 'message' => 'Logged in successfully',
