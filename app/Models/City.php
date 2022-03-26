@@ -11,12 +11,17 @@ class City extends Model
     use HasFactory;
 
 
-    public function users (){
-        return $this->hasMany(User::class,'city_id','id');
+    public function users()
+    {
+        return $this->hasMany(User::class, 'city_id', 'id');
     }
 
-    public function getActiveStatusAttribute(){
-            return $this->active ==1 ? 'Active' : 'InActive';
-
+    public function getActiveStatusAttribute()
+    {
+        return $this->active == 1 ? 'Active' : 'InActive';
     }
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

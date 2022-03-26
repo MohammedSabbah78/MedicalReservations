@@ -34,7 +34,7 @@ class CityPolicy
     public function view($user, City $city)
     {
         //
-        return $user->hasPermissionTo('Read-Citiies')
+        return $user->hasPermissionTo('Read-Cities')
             ? $this->allow()
             : $this->deny('Don\'t have Permission ', 403);
     }
@@ -48,7 +48,7 @@ class CityPolicy
     public function create($user)
     {
         //
-        return $user->hasPermissionTo('Create-Citiy')
+        return $user->hasPermissionTo('Create-City')
             ? $this->allow()
             : $this->deny('Don\'t have Permission ', 403);
     }
@@ -63,7 +63,7 @@ class CityPolicy
     public function update($user, City $city)
     {
         //
-        return $user->hasPermissionTo('Update-Citiy')
+        return $user->hasPermissionTo('Update-City')
             ? $this->allow()
             : $this->deny('Don\'t have Permission ', 403);
     }
@@ -78,7 +78,7 @@ class CityPolicy
     public function delete($user, City $city)
     {
         //
-        return $user->hasPermissionTo('Delete-Citiy')
+        return $user->hasPermissionTo('Delete-City')
             ? $this->allow()
             : $this->deny('Don\'t have Permission ', 403);
     }

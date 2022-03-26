@@ -14,7 +14,7 @@ class AdminController extends Controller
 
     public function __construct()
     {
-        // $this->authorizeResource(Admin::class,'admin');
+        $this->authorizeResource(Admin::class, 'admin');
     }
 
     /**
@@ -148,10 +148,10 @@ class AdminController extends Controller
                 $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
             );
         } else {
+            return response()->json(
+                ['message' =>  'Can\'t Delete Your Self'],
+                Response::HTTP_BAD_REQUEST
+            );
         }
-        return response()->json(
-            ['message' =>  'Can\'t Delete Your Self'],
-            Response::HTTP_BAD_REQUEST
-        );
     }
 }

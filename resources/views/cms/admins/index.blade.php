@@ -52,12 +52,12 @@
                                             </a>
                                             @endcan
                                             @can('Delete-Admin')
-                                            {{-- @if (auth('admin')->Admin()->id != $admin->id) --}}
+                                            @if (auth('admin')->user()->id != $admin->id)
                                             <a href="#" onclick="confirmDelete('{{$admin->id}}',this)"
                                                 class="btn btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                            {{-- @endif --}}
+                                            @endif
                                             @endcan
                                         </div>
                                         @endcanany
