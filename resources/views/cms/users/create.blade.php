@@ -61,7 +61,19 @@
 
 
             </div>
-            <!-- /.card-body -->
+
+            <div class="form-group">
+                <label for="image_file">Image</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="image_file">
+                        <label class="custom-file-label" for="image_file">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                </div>
+            </div>
 
             <div class="card-footer">
                 <button type="button" onclick="performStore()" class="btn btn-primary">{{__('cms.save')}}</button>
@@ -77,6 +89,13 @@
 @endsection
 
 @section('scripts')
+
+<script src="{{asset('cms/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+<script>
+    $(function () {bsCustomFileInput.init();});
+</script>
+
+
 <!-- Select2 -->
 <script src="{{asset('cms/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- Toastr -->
@@ -94,13 +113,19 @@ $('.gender').select2({
         });
 
 
+
         function performStore(){
-            axios.post('/cms/admin/users', {
-               name: document.getElementById('name').value,
-               email: document.getElementById('email').value,
-               city_id: document.getElementById('city_id').value,
-               gender: document.getElementById('gender').value,
-            })
+
+        let formData=new FormData();
+        formData.append('name',document.getElementById('name').value);
+        formData.append('email',document.getElementById('email').value);
+        formData.append('city_id',document.getElementById('city_id').value);
+        formData.append('gender',document.getElementById('gender').value);
+        formData.append('image',document.getElementById('image_file').files[0]);
+
+
+
+            axios.post('/cms/admin/users',formData)
             .then(function (response) {
             console.log(response);
             toastr.success(response.data.message);
@@ -118,5 +143,15 @@ $('.gender').select2({
         }
 
 </script>
+
+
+
+
+
+
+
+
+
+
 
 @endsection

@@ -22,6 +22,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Image</th>
                                     <th style="width: 10px">#</th>
                                     <th>Name</th>
                                     <th>Email</th>
@@ -37,6 +38,7 @@
 
                                 @foreach ($users as $user )
                                 <tr>
+                                    <td><img width="60" height="60" src="{{Storage::url($user->image)}}"></td>
                                     <td>{{$user->id}}</td>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->email}}</td>

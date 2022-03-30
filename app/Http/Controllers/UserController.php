@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use SebastianBergmann\Environment\Console;
 use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,6 +52,7 @@ class UserController extends Controller
             'gender' => 'required|string|in:M,F',
             'name' => 'required|string|min:3',
             'email' => 'required|email|unique:users,email',
+            'image' => 'required|image|max:2048|mimes:jpg,png',
         ]);
 
 
@@ -61,12 +63,21 @@ class UserController extends Controller
             $user->city_id = $request->input('city_id');
             $user->gender = $request->input('gender');
             $user->password = Hash::make('password');
+
+            if ($request->hasFile('image')) {
+
+                $imageName = time() . "_user_image" . '.' . $request->file('image')->getClientOriginalExtension();
+                $request->file('image')->storePubliclyAs('images', $imageName);
+                $user->image = 'images/' . $imageName;
+            }
+
             $isSaved = $user->save();
             return response()->json(
                 ['message' => $isSaved ? 'Created' : 'Failed'],
                 $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
             );
         } else {
+
             return response()->json(
                 ["message" => $validator->getMessageBag()->first()],
                 Response::HTTP_BAD_REQUEST
@@ -113,6 +124,8 @@ class UserController extends Controller
             'gender' => 'required|string|in:M,F',
             'name' => 'required|string|min:3',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'image' => 'nullable|image|max:2048|mimes:jpg,png',
+
         ]);
 
 
@@ -121,6 +134,14 @@ class UserController extends Controller
             $user->email = $request->input('email');
             $user->city_id = $request->input('city_id');
             $user->gender = $request->input('gender');
+
+            if ($request->hasFile('image')) {
+                Storage::delete($user->image);
+
+                $imageName = time() . "_user_image" . '.' . $request->file('image')->getClientOriginalExtension();
+                $request->file('image')->storePubliclyAs('images', $imageName);
+                $user->image = 'images/' . $imageName;
+            }
             $isSaved = $user->save();
             return response()->json(
                 ['message' => $isSaved ? 'Updated' : 'Failed'],
@@ -144,6 +165,10 @@ class UserController extends Controller
     {
         //
         $deleted = $user->delete();
+        if ($deleted) {
+
+            Storage::delete($user->image);
+        }
         return response()->json(
             ['message' => $deleted ? 'Deleted!' : 'Failed'],
             $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
