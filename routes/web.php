@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AgeCheckMiddleware;
+use App\Mail\AdminWelcomeEmail;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +28,10 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('cms')->middleware('guest:user,admin')->group(function () {
     Route::get('/{guard}/login', [AuthController::class, 'showLoginView'])->name('auth.login');
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('forgot-password', [ResetPasswordController::class, 'showForgotPassword'])->name('password.forgot');
+    Route::post('forgot-password', [ResetPasswordController::class, 'sendResetLink']);
+    Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetPassword'])->name('password.reset');
+    Route::post('reset-password', [ResetPasswordController::class, 'resetPassword']);
 });
 
 
@@ -40,12 +47,9 @@ Route::prefix('cms/admin')->middleware('auth:admin')->group(function () {
     Route::put('users/{user}/permissions', [UserController::class, 'updateUserPermission'])->name('user.update-permissions');
 });
 
-
 Route::prefix('cms/admin')->middleware('auth:user,admin')->group(function () {
-    Route::view('/', 'cms.dashboard');
     Route::resource('cities', CityController::class);
     Route::resource('users', UserController::class);
-
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
@@ -70,3 +74,7 @@ Route::prefix('cms/admin')->middleware('auth:user,admin')->group(function () {
 Route::get('news', function () {
     echo 'New Content  ';
 })->middleware('ageCheck:15');
+
+// Route::get('test-email', function () {
+//     return new AdminWelcomeEmail(Admin::first());
+// });
