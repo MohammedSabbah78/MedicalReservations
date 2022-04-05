@@ -28,6 +28,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('cms')->middleware('guest:user,admin')->group(function () {
     Route::get('/{guard}/login', [AuthController::class, 'showLoginView'])->name('auth.login');
     Route::post('/login', [AuthController::class, 'login']);
+
+
+    
     Route::get('forgot-password', [ResetPasswordController::class, 'showForgotPassword'])->name('password.forgot');
     Route::post('forgot-password', [ResetPasswordController::class, 'sendResetLink']);
     Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetPassword'])->name('password.reset');
