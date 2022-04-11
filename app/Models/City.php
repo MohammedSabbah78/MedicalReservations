@@ -25,7 +25,6 @@ class City extends Model
         'updated_at',
     ];
 
-
     /**
      * The attributes that should be cast.
      *

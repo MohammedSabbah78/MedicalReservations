@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
+use Str;
 
 class AdminController extends Controller
 {
@@ -64,11 +65,14 @@ class AdminController extends Controller
 
             // $admin->password = Hash::make(random_int(0001, 9999));
 
-            $admin->password = Hash::make('password');
+            $randomPassword = Str::random(10);
+            $admin->password = Hash::make($randomPassword);
+
+
             $isSaved = $admin->save();
             if ($isSaved) {
                 $admin->assignRole(Role::findOrFail($request->input('role_id')));
-                Mail::to($admin)->send(new AdminWelcomeEmail($admin));
+                Mail::to($admin)->send(new AdminWelcomeEmail($admin, $randomPassword));
             }
             return response()->json(
                 ['message' => $isSaved ? 'Created' : 'Failed'],

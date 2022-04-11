@@ -14,15 +14,18 @@ class AdminWelcomeEmail extends Mailable
     use Queueable, SerializesModels;
 
     public Admin $admin;
+    public string $password;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Admin $admin)
+    public function __construct(Admin $admin, $password)
     {
         //
         $this->admin = $admin;
+        $this->password = $password;
     }
 
     /**
@@ -36,4 +39,3 @@ class AdminWelcomeEmail extends Mailable
             ->from('info@medical-app.ps', 'Medical System')->cc('hr@medical.ps');
     }
 }
- 

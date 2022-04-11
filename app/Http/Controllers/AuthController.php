@@ -7,7 +7,9 @@ use Dotenv\Validator;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -67,20 +69,43 @@ class AuthController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
     public function logout(Request $request)
     {
         $guard = session('guard');
         Auth::guard($guard)->logout();
         $request->session()->invalidate();
         return redirect()->route('auth.login', $guard);
+    }
+
+    public function editPassword()
+    {
+        return response()->view('auth.edit-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $guard = auth('admin')->check() ? 'admin' : 'user';
+        $validator = Validator($request->all(), [
+            'password' => 'required|current_password:' . $guard,
+            'new_password' => ['required', 'confirmed', Password::min(8)->letters()->symbols()->numbers()->mixedCase()->uncompromised()],
+
+        ]);
+        if (!$validator->fails()) {
+            $user = $request->user();
+            $user->forceFill(
+                ['password' => Hash::make($request->input('new_password'))]
+            );
+            $isSaved = $user->save();
+
+            return response()->json(
+                ['message' => $isSaved ? 'Updated successfully' : 'Updated Failed!'],
+                $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ["message" => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 }

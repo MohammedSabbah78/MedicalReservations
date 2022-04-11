@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\City;
 use App\Models\User;
+use App\Notifications\NewUserNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use SebastianBergmann\Environment\Console;
 use Spatie\Permission\Models\Permission;
@@ -72,6 +75,12 @@ class UserController extends Controller
             }
 
             $isSaved = $user->save();
+            if ($isSaved) {
+                // Notification::send([Admin::all()], new NewUserNotification($user));
+
+                $admin = Admin::hasRoleTo('Super-Admin');
+                $admin->notify(new NewUserNotification($user, auth()->user()->name));
+            }
             return response()->json(
                 ['message' => $isSaved ? 'Created' : 'Failed'],
                 $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
