@@ -76,10 +76,18 @@ class UserController extends Controller
 
             $isSaved = $user->save();
             if ($isSaved) {
-                // Notification::send([Admin::all()], new NewUserNotification($user));
 
-                $admin = Admin::hasRoleTo('Super-Admin');
-                $admin->notify(new NewUserNotification($user, auth()->user()->name));
+
+                $admin = Admin::whereHas('roles', function ($query) {
+
+                    $query->where('name', '=', 'Super-Admin');
+                })->get();
+
+
+                Notification::send($admin, new NewUserNotification($user));
+
+                // $admin = Admin::first();
+                // $admin->notify(new NewUserNotification($user));
             }
             return response()->json(
                 ['message' => $isSaved ? 'Created' : 'Failed'],

@@ -13,18 +13,18 @@ class NewUserNotification extends Notification
 {
     use Queueable;
     private User $user;
-    private Admin $admin;
+    // private Admin $admin;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $user, Admin $admin)
+    public function __construct(User $user)
     {
         //
         $this->user = $user;
-        $this->admin = $admin;
+        // $this->admin = $admin;
     }
 
     /**
@@ -63,7 +63,7 @@ class NewUserNotification extends Notification
         return [
             //
             'title' => "New User Register",
-            'message' => "New User (" . $this->user->name . ") Registered Via" . $this->admin->name .  " Admin",
+            'message' => "New User (" . $this->user->name . ") Registered Via" . " Admin",
         ];
     }
 }

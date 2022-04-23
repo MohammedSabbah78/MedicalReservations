@@ -10,6 +10,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AgeCheckMiddleware;
+use App\Jobs\TestJob;
 use App\Mail\AdminWelcomeEmail;
 use App\Models\Admin;
 use App\Models\User;
@@ -93,3 +94,8 @@ Route::get('news', function () {
 // Route::get('test-email', function () {
 //     return new AdminWelcomeEmail(Admin::first());
 // });
+
+Route::get('test-job', function () {
+
+    (new TestJob())->dispatch();
+});
